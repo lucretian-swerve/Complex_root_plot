@@ -156,10 +156,3 @@ with st.expander("View Roots as a Table"):
     ]
     df = pd.DataFrame(data)
     st.dataframe(df)
-
-# About section
-with st.expander("About this app"):
-    st.markdown("""
-    This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
-    """)
-    st.latex(r"z_k = r^{1/n} \cdot \text{cis}\left( \frac{\theta + 2\pi k}{n} \right)")
