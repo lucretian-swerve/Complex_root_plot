@@ -66,7 +66,7 @@ with st.sidebar:
     mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
     if mode == "Rectangular (a + bi)":
-        real = st.number_input("Real part (a)", value=st.session_state.get("real", -8.0), key="real")
+        real = st.number_input("Real part (a)", value=st.session_state.get("real", 1), key="real")
         imag = st.number_input("Imaginary part (b)", value=st.session_state.get("imag", 0.0), key="imag")
     else:
         r = st.number_input("Modulus (r)", value=1, min_value=0.0)
