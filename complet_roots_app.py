@@ -66,14 +66,16 @@ with st.sidebar:
     mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
     if mode == "Rectangular (a + bi)":
-        real = st.number_input("Real part (a)", value=1)
-        imag = st.number_input("Imaginary part (b)", value=0.0)
+        real = st.number_input("Real part (a)", value=st.session_state.get("real", -8.0), key="real")
+        imag = st.number_input("Imaginary part (b)", value=st.session_state.get("imag", 0.0), key="imag")
     else:
-        r = st.number_input("Modulus (r)", value=8.0, min_value=0.0)
+        r = st.number_input("Modulus (r)", value=1, min_value=0.0)
         theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
         theta = np.deg2rad(theta_deg)
         real = r * np.cos(theta)
         imag = r * np.sin(theta)
+        st.session_state["real"] = real
+        st.session_state["imag"] = imag
         st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
 
     n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
