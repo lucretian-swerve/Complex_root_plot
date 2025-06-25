@@ -127,34 +127,40 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-st.markdown("###Animate Roots Raising to a Power")
+st.markdown("### ▶️ Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
-    powers = np.linspace(0.0, n, 30)  # Fewer, stronger frames
+    powers = np.linspace(0.0, n, 30)  # ~30 frames is smoother & faster
 
-    # Fixed plot limits
+    # Precompute plot limits for consistency
     all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
     fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in all_powered) * 1.3
 
     for exp in powers:
         powered_roots_anim = raise_root_properly_fixed(r_input, theta_input, n, exp)
         fig_anim, ax_anim = plt.subplots(figsize=(5, 5), dpi=72)
-        ax_anim.axhline(0, color='black', linewidth=1)
-        ax_anim.axvline(0, color='black', linewidth=1)
+
+        # Plot style
+        ax_anim.axhline(0, color='black', linewidth=1.2)
+        ax_anim.axvline(0, color='black', linewidth=1.2)
+
+        # Plot each root and connecting line to origin
         for z in powered_roots_anim:
+            ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
             ax_anim.plot(z.real, z.imag, 'o', color='blue')
+
         ax_anim.set_title(f"Power = {round(exp, 2)}")
         ax_anim.set_xlabel("Real")
         ax_anim.set_ylabel("Imaginary")
         ax_anim.set_aspect('equal')
-        ax_anim.grid(False)
+        ax_anim.grid(True)
         ax_anim.set_xlim(-fixed_lim, fixed_lim)
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
-        ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
-        placeholder.pyplot(fig_anim)
-        time.sleep(0.01)  # Short but perceptible
 
-    time.sleep(1.5)
+        placeholder.pyplot(fig_anim)
+        time.sleep(0.01)  # Faster animation
+
+    time.sleep(1.5)  # Hold final frame
 
 
     # Hold final frame
