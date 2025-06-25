@@ -127,7 +127,7 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-st.markdown("### ▶️ Animate Roots Raising to a Power")
+st.markdown("###Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
     powers = np.linspace(0.0, n, 60)
