@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from math import sin, cos, atan2, pi, e
 from sympy import symbols, I, expand, simplify, collect, latex
-
+import time  
 # ----------------------------
 # Math functions
 # ----------------------------
