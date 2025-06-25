@@ -99,7 +99,7 @@ st.latex(f"x^{n} = {round(real, 2)} {'-' if imag < 0 else '+'} {round(abs(imag),
 # ----------------------------
 # Root calculation breakdown
 # ----------------------------
-st.markdown("### 🧮 Root Calculations")
+st.markdown("### Root Calculations")
 
 # Compute polar coordinates of input
 r_input = (real**2 + imag**2)**0.5
@@ -134,7 +134,7 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius)
 st.pyplot(fig)
 
-
+"""
 # ----------------------------
 # Root verification section
 # ----------------------------
@@ -197,3 +197,4 @@ st.latex(rf"z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powe
 # Show original
 st.markdown("### Original Equation:")
 st.latex(rf"x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i")
+"""
