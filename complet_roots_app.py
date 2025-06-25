@@ -40,7 +40,7 @@ def plot_complex_solutions(complex_nums, fixed_limit=None, connect=False):
         for i in range(len(complex_nums)):
             z1 = complex_nums[i]
             z2 = complex_nums[(i + 1) % len(complex_nums)]
-            ax.plot([z1.real, z2.real], [z1.imag, z2.imag], color='gray', linestyle='--', linewidth=2)
+            ax.plot([z1.real, z2.real], [z1.imag, z2.imag], color='gray', linestyle='-', linewidth=2)
 
     # Annotate roots
     for i, z in enumerate(complex_nums):
