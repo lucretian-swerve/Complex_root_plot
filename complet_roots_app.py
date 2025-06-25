@@ -127,31 +127,16 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-st.markdown("### Raise Roots to a Power")
-exp_slider = st.slider("Exponent", min_value=0.0, max_value=float(n), value=1.0, step=0.05)
-powered_roots = raise_root_properly_fixed(r_input, theta_input, n, exp_slider)
-fig2, ax2 = plt.subplots(figsize=(6, 6))
-ax2.axhline(0, color='black', linewidth=1.2)
-ax2.axvline(0, color='black', linewidth=1.2)
-for z in roots:
-    ax2.plot(z.real, z.imag, 'o', color='lightgray')
-for z in powered_roots:
-    ax2.plot(z.real, z.imag, 'o', color='blue')
-    ax2.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
-ax2.set_title(f"Roots Raised to Power {exp_slider}")
-ax2.set_xlabel("Real")
-ax2.set_ylabel("Imaginary")
-ax2.set_aspect('equal')
-ax2.grid(True)
-lim = max(max(abs(z.real), abs(z.imag)) for z in powered_roots) * 1.3
-ax2.set_xlim(-lim, lim)
-ax2.set_ylim(-lim, lim)
-st.pyplot(fig2)
-
 st.markdown("### Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
-    for exp in np.linspace(0.0, n, 60):
+    powers = np.linspace(0.0, n, 60)
+
+    # Precompute fixed axis limit using max power = n
+    all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
+    fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in all_powered) * 1.3
+
+    for exp in powers:
         powered_roots_anim = raise_root_properly_fixed(r_input, theta_input, n, exp)
         fig_anim, ax_anim = plt.subplots(figsize=(6, 6))
         ax_anim.axhline(0, color='black', linewidth=1.2)
@@ -166,12 +151,15 @@ if st.button("Play Animation"):
         ax_anim.set_ylabel("Imaginary")
         ax_anim.set_aspect('equal')
         ax_anim.grid(True)
-        lim = max(max(abs(z.real), abs(z.imag)) for z in powered_roots_anim) * 1.3
-        ax_anim.set_xlim(-lim, lim)
-        ax_anim.set_ylim(-lim, lim)
+        ax_anim.set_xlim(-fixed_lim, fixed_lim)
+        ax_anim.set_ylim(-fixed_lim, fixed_lim)
         placeholder.pyplot(fig_anim)
         plt.close(fig_anim)
-        time.sleep(0.05)
+        time.sleep(0.01)
+
+    # ⏸ Pause after convergence
+    time.sleep(1.5)
+
 
 with st.expander("View Roots as a Table"):
     data = [
