@@ -190,6 +190,7 @@ if st.button("Play Reverse Animation"):
         for z in powered_roots_anim:
             ax_anim.plot(z.real, z.imag, 'o', color='blue')
             ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
+            ax_anim.text(z.real, z.imag, f"z{i}", fontsize=9, ha='right', va='bottom', color='gray')
         ax_anim.set_title(f"Power = {round(exp, 2)}")
         ax_anim.set_xlabel("Real")
         ax_anim.set_ylabel("Imaginary")
