@@ -6,6 +6,14 @@ from math import sin, cos, atan2, pi, e
 from sympy import symbols, I, expand, simplify, collect, latex
 import time
 
+if "animate_step" not in st.session_state:
+    st.session_state.animate_step = 0
+if "paused" not in st.session_state:
+    st.session_state.paused = False
+if "running" not in st.session_state:
+    st.session_state.running = False
+
+
 # ----------------------------
 # Math functions
 # ----------------------------
@@ -127,16 +135,28 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
+col1, col2, col3 = st.columns(3)
+if col1.button("Start Animation"):
+    st.session_state.running = True
+    st.session_state.paused = False
+    st.session_state.animate_step = 0
+
+if col2.button("Pause"):
+    st.session_state.paused = True
+
+if col3.button("Resume"):
+    if st.session_state.running:
+        st.session_state.paused = False
+
+
 st.markdown("### Animate Roots Raising to a Power")
-if st.button("Play Animation"):
-    placeholder = st.empty()
+if st.session_state.running and not st.session_state.paused:
     powers = np.linspace(0.0, n, 60)
+    step = st.session_state.animate_step
 
-    # Precompute fixed axis limit using max power = n
-    all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
-    fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in all_powered) * 1.3
+    if step < len(powers):
+        exp = powers[step]
 
-    for exp in powers:
         powered_roots_anim = raise_root_properly_fixed(r_input, theta_input, n, exp)
         fig_anim, ax_anim = plt.subplots(figsize=(6, 6))
         ax_anim.axhline(0, color='black', linewidth=1.2)
@@ -151,14 +171,23 @@ if st.button("Play Animation"):
         ax_anim.set_ylabel("Imaginary")
         ax_anim.set_aspect('equal')
         ax_anim.grid(True)
+
+        # Fix final frame size
+        all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
+        fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in all_powered) * 1.3
         ax_anim.set_xlim(-fixed_lim, fixed_lim)
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
-        placeholder.pyplot(fig_anim)
-        plt.close(fig_anim)
-        time.sleep(0.01)
 
-    # ⏸ Pause after convergence
-    time.sleep(1.5)
+        st.pyplot(fig_anim)
+
+        st.session_state.animate_step += 1
+        time.sleep(0.05)
+
+        # Trick to trigger rerun for next frame
+        st.experimental_rerun()
+    else:
+        st.session_state.running = False
+        st.session_state.animate_step = 0
 
 
 with st.expander("View Roots as a Table"):
