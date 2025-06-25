@@ -156,8 +156,8 @@ if n <= 6:
     im_val = imag_part.evalf()
 
     # Format to 2 decimal places for clean output
-    re_str = format(re_val, ".2f")
-    im_str = format(abs(im_val), ".2f")
+    re_str = format(re_val, ".1f")
+    im_str = format(abs(im_val), ".1f")
     sign = "-" if im_val < 0 else "+"
 
     # Display steps
