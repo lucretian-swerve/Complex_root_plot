@@ -66,10 +66,12 @@ with st.sidebar:
     mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
     if mode == "Rectangular (a + bi)":
-        real = st.number_input("Real part (a)", value=st.session_state.get("real", 1), key="real")
-        imag = st.number_input("Imaginary part (b)", value=st.session_state.get("imag", 0.0), key="imag")
+        real = st.number_input("Real part (a)", key="real_input", value=st.session_state.get("real", -8.0))
+        imag = st.number_input("Imaginary part (b)", key="imag_input", value=st.session_state.get("imag", 0.0))
+        st.session_state["real"] = real
+        st.session_state["imag"] = imag
     else:
-        r = st.number_input("Modulus (r)", value=1, min_value=0.0)
+        r = st.number_input("Modulus (r)", value=8.0, min_value=0.0)
         theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
         theta = np.deg2rad(theta_deg)
         real = r * np.cos(theta)
@@ -78,7 +80,7 @@ with st.sidebar:
         st.session_state["imag"] = imag
         st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
 
-    n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
+    n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
     speed = st.slider("Animation Speed (lower = faster)", min_value=1, max_value=100, value=20, step=1)
 
     animate = st.button("▶ Animate Convergence", key="animate")
