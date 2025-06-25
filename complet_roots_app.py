@@ -67,7 +67,7 @@ mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
 # Input fields
 if mode == "Rectangular (a + bi)":
-    real = st.number_input("Real part (a)", value=-8.0)
+    real = st.number_input("Real part (a)", value=1)
     imag = st.number_input("Imaginary part (b)", value=0.0)
 else:
     r = st.number_input("Modulus (r)", value=8.0, min_value=0.0)
@@ -77,7 +77,7 @@ else:
     imag = r * np.sin(theta)
     st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
 
-n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
+n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
 speed = st.slider("Animation Speed (lower = faster)", min_value=1, max_value=100, value=20, step=1)
 
 # Explanation panel
@@ -108,7 +108,7 @@ if animate:
         converged = rotate_and_converge(roots, power=exp)
         fig = plot_complex_solutions(converged, fixed_limit=max_radius)
         placeholder.pyplot(fig)
-        time.sleep(speed / 10000.0)  # Smoother and faster max animation
+        time.sleep(speed / 100000.0)  # Smoother and faster max animation
 else:
     fig = plot_complex_solutions(roots, fixed_limit=max_radius)
     placeholder.pyplot(fig)
