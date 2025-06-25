@@ -113,28 +113,11 @@ st.pyplot(fig)
 
 
 # ----------------------------
-# Root verification section (improved)
+# Root verification section
 # ----------------------------
 st.subheader("🧪 Root Verification")
-if n <= 6:
-    st.markdown("### 🔍 Binomial Expansion of the Root:")
-    
-    a_val = round(zk.real, 4)
-    b_val = round(zk.imag, 4)
-    
-    a, b = symbols('a b')
-    z = a + b * I
-    expr = expand(z ** n)
-    simplified_expr = collect(expr, I)
 
-    # Substitute numeric values
-    numeric_expr = expr.subs({a: a_val, b: b_val})
-    numeric_simplified = simplify(numeric_expr)
-    
-    st.latex(rf"(a + bi)^{{{n}}} = {latex(expr)}")
-    st.latex(rf"= {latex(simplified_expr)}")
-    st.latex(rf"= {latex(numeric_simplified)}")
-
+# Select a root to verify
 root_index = st.slider("Select root to verify (zₖ)", min_value=0, max_value=n-1, value=0, step=1)
 zk = roots[root_index]
 zk_powered = zk ** n
@@ -142,22 +125,38 @@ zk_powered_clean = complex(round(zk_powered.real, 4), round(zk_powered.imag, 4))
 original_clean = complex(round(real, 4), round(imag, 4))
 error = abs(zk_powered - (real + imag * 1j))
 
+# Display selected root
 st.markdown(f"### Selected Root: $z_{{{root_index}}}$")
-st.latex(
-    rf"z_{{{root_index}}} = {round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i"
-)
+st.latex(rf"z_{{{root_index}}} = {round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i")
 
+# Show expression raised to power
 st.markdown("### Raised to the Power:")
-st.latex(
-    rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i)^{{{n}}}"
-)
+st.latex(rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i)^{{{n}}}")
 
+# Binomial expansion (only if n is small)
+if n <= 6:
+    st.markdown("### 🔍 Binomial Expansion:")
+    a_val = round(zk.real, 4)
+    b_val = round(zk.imag, 4)
+    a, b = symbols('a b')
+    z_sym = a + b * I
+
+    expanded = expand(z_sym ** n)
+    collected = collect(expanded, I)
+    substituted = simplify(expanded.subs({a: a_val, b: b_val}))
+
+    st.latex(rf"(a + bi)^{{{n}}} = {latex(expanded)}")
+    st.latex(rf"= {latex(collected)}")
+    st.latex(rf"= {latex(substituted)}")
+
+# Show result
 st.markdown("### Result:")
-st.latex(
-    rf"z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powered_clean.imag < 0 else '+'} {abs(zk_powered_clean.imag)}i"
-)
+st.latex(rf"z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powered_clean.imag < 0 else '+'} {abs(zk_powered_clean.imag)}i")
 
-st.markdown("### Original:")
-st.latex(
-    rf"x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i"
-)
+# Show original
+st.markdown("### Original Number:")
+st.latex(rf"x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i")
+
+# Show error
+st.markdown("### Error:")
+st.latex(rf"\left| z_{{{root_index}}}^{{{n}}} - (a + bi) \right| = {round(error, 6)}")
