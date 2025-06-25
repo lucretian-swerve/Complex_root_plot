@@ -136,28 +136,35 @@ st.latex(rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 
 # Binomial expansion (only if n is small)
 if n <= 6:
     st.markdown("### 🔍 Binomial Expansion:")
-    
-    # Use full-precision real and imaginary parts
+
+    # Use full-precision a and b from the selected root
     a_val = float(zk.real)
     b_val = float(zk.imag)
-    
+
+    # Declare symbolic variables
     a, b = symbols('a b')
     z_sym = a + b * I
+
+    # Perform symbolic expansion and simplification
     expanded = expand(z_sym ** n)
     collected = collect(expanded, I)
     substituted_expr = simplify(expanded.subs({a: a_val, b: b_val}))
-    
-    # Extract real and imaginary parts, evaluate numerically, and round for display
-    real_part, imag_part = substituted_expr.as_real_imag()
-    re = round(real_part.evalf(), 2)
-    im = round(imag_part.evalf(), 2)
-    sign = "-" if im < 0 else "+"
 
-    # Display the binomial expansion
+    # Evaluate real and imaginary parts
+    real_part, imag_part = substituted_expr.as_real_imag()
+    re_val = real_part.evalf()
+    im_val = imag_part.evalf()
+
+    # Format to 2 decimal places for clean output
+    re_str = format(re_val, ".2f")
+    im_str = format(abs(im_val), ".2f")
+    sign = "-" if im_val < 0 else "+"
+
+    # Display steps
     st.latex(rf"(a + bi)^{{{n}}} = {latex(expanded)}")
     st.latex(rf"= {latex(collected)}")
     st.latex(rf"\text{{where }} a = {round(a_val, 2)}, \quad b = {round(b_val, 2)}")
-    st.latex(rf"= {re} {sign} {abs(im)}i")
+    st.latex(rf"= {re_str} {sign} {im_str}i")
 
 
 # Show result
