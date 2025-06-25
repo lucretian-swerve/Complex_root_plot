@@ -141,8 +141,3 @@ st.markdown("### Original:")
 st.latex(
     rf"x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i"
 )
-
-st.markdown("### Error:")
-st.latex(
-    rf"\left| z_{{{root_index}}}^{{{n}}} - (a + bi) \right| = {round(error, 6)}"
-)
