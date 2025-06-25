@@ -3,6 +3,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 from math import sin, cos, atan2, pi
 
 # ----------------------------
@@ -15,6 +16,9 @@ def comp_solution(real, imaginary, root):
     r = (real**2 + imaginary**2)**0.5
     theta = atan2(imaginary, real)
     return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
+
+def rotate_and_converge(roots, power=1):
+    return [abs(z)**power * cis((np.angle(z) % (2 * pi)) * power) for z in roots]
 
 # ----------------------------
 # Plotting function
@@ -42,6 +46,7 @@ def plot_complex_solutions(complex_nums, fixed_limit=None):
     ax.set_xlabel("Real")
     ax.set_ylabel("Imaginary")
 
+    # Lock axis limits to prevent plot from resizing
     if fixed_limit:
         ax.set_xlim(-fixed_limit, fixed_limit)
         ax.set_ylim(-fixed_limit, fixed_limit)
@@ -55,50 +60,54 @@ def plot_complex_solutions(complex_nums, fixed_limit=None):
 # ----------------------------
 # Streamlit UI
 # ----------------------------
-st.set_page_config(page_title="Complex Root Visualizer", layout="centered")
 st.title("🔢 Complex Root Visualizer")
 
-if "real" not in st.session_state:
-    st.session_state["real"] = -8.0
-if "imag" not in st.session_state:
-    st.session_state["imag"] = 0.0
+# Input mode toggle
+mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
-with st.sidebar:
-    mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
+# Input fields
+if mode == "Rectangular (a + bi)":
+    real = st.number_input("Real part (a)", value=1)
+    imag = st.number_input("Imaginary part (b)", value=0.0)
+else:
+    r = st.number_input("Modulus (r)", value=1, min_value=0.0)
+    theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
+    theta = np.deg2rad(theta_deg)
+    real = r * np.cos(theta)
+    imag = r * np.sin(theta)
+    st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
 
-    if mode == "Rectangular (a + bi)":
-        real = st.number_input("Real part (a)", value=st.session_state["real"], key="real_input")
-        imag = st.number_input("Imaginary part (b)", value=st.session_state["imag"], key="imag_input")
-    else:
-        r = st.number_input("Modulus (r)", value=8.0, min_value=0.0)
-        theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
-        theta = np.deg2rad(theta_deg)
-        real = r * np.cos(theta)
-        imag = r * np.sin(theta)
-        st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
+n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
 
-    # Always update session_state with latest real/imag
-    st.session_state["real"] = real
-    st.session_state["imag"] = imag
-
-    n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
-
-    st.markdown("---")
-    st.subheader("🧮 Root Equation")
-    st.latex(f"x^{{{n}}} = {round(real, 2)} {'+' if imag >= 0 else '-'} {abs(round(imag, 2))}i")
-
+# Explanation panel
 with st.expander("ℹ️ About this app"):
     st.markdown("""
     This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
 
     - Roots are evenly spaced around a circle
     - You can input in rectangular or polar form
+    - Click the button below to animate the roots converging to the original number (via exponentiation)
 
     Complex roots are given by:
     \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
     """)
 
+# Animate or reset
+animate = st.button("▶ Animate Convergence")
+reset = st.button("⏹ Reset")
+
+placeholder = st.empty()
 roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) * 1.1
-fig = plot_complex_solutions(roots, fixed_limit=max_radius)
-st.pyplot(fig)
+max_radius = max(abs(z) for z in roots) ** n * 1.1
+
+if animate:
+    for exp in np.linspace(1, n, 200):
+        if reset:
+            break
+        converged = rotate_and_converge(roots, power=exp)
+        fig = plot_complex_solutions(converged, fixed_limit=max_radius)
+        placeholder.pyplot(fig)
+        time.sleep(0.01)
+else:
+    fig = plot_complex_solutions(roots, fixed_limit=max_radius)
+    placeholder.pyplot(fig)
