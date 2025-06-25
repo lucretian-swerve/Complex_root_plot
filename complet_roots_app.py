@@ -115,9 +115,8 @@ for k in range(n):
     re = round(z_k.real, 2)
     im = round(z_k.imag, 2)
     st.latex(
-        rf"z_{{{k}}} = \sqrt[{n}]{{{round(r_input, 2)}}} \cdot 	ext{{cis}}\left( rac{{	heta + 2\pi \cdot {k}}}{{{n}}} 
-ight) = "
-        rf"{round(root_mod, 2)} \cdot 	ext{{cis}}({round(angle_k, 2)}\ 	ext{{rad}}) = {re} {'-' if im < 0 else '+'} {abs(im)}i"
+        rf"z_{{{k}}} = \sqrt[{n}]{{{round(r_input, 2)}}} \cdot \text{{cis}}\left( \frac{{\theta + 2\pi \cdot {k}}}{{{n}}} \right) = "
+        rf"{round(root_mod, 2)} \cdot \text{{cis}}({round(angle_k, 2)}\ \text{{rad}}) = {re} {'-' if im < 0 else '+'} {abs(im)}i"
     )
 
 roots = comp_solution(real, imag, n)
