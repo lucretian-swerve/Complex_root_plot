@@ -3,9 +3,9 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from math import sin, cos, atan2, pi, e
 from sympy import symbols, I, expand, simplify, collect, latex
-import pandas as pd
 
 # ----------------------------
 # Math functions
@@ -17,6 +17,10 @@ def comp_solution(real, imaginary, root):
     r = (real**2 + imaginary**2)**0.5
     theta = atan2(imaginary, real)
     return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
+
+def subscript(n):
+    subs = "₀₁₂₃₄₅₆₇₈₉"
+    return ''.join(subs[int(d)] for d in str(n))
 
 # ----------------------------
 # Plotting function
@@ -35,12 +39,12 @@ def plot_complex_solutions(complex_nums, fixed_limit=None, connect=False):
     theta = np.linspace(0, 2 * np.pi, 500)
     ax.plot(radius * np.cos(theta), radius * np.sin(theta), '--', color='green')
 
-    # Connect roots if enabled
+    # Connect roots in order if enabled
     if connect and len(complex_nums) > 1:
         for i in range(len(complex_nums)):
             z1 = complex_nums[i]
             z2 = complex_nums[(i + 1) % len(complex_nums)]
-            ax.plot([z1.real, z2.real], [z1.imag, z2.imag], color='blue', linestyle='-', linewidth=2.5)
+            ax.plot([z1.real, z2.real], [z1.imag, z2.imag], color='gray', linestyle='-', linewidth=2)
 
     # Annotate roots
     for i, z in enumerate(complex_nums):
@@ -97,15 +101,13 @@ else:
 n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
 
 # Show root equation
-st.markdown("### Root Equation:")
+st.markdown(f"### Root Equation:")
 st.latex(f"x^{n} = {round(real, 2)} {'-' if imag < 0 else '+'} {round(abs(imag), 2)}i")
 
 # Root calculation breakdown
 st.markdown("### Root Calculations")
-
 r_input = (real**2 + imag**2)**0.5
 theta_input = atan2(imag, real)
-
 for k in range(n):
     angle_k = (theta_input + 2 * pi * k) / n
     root_mod = r_input ** (1/n)
@@ -113,42 +115,44 @@ for k in range(n):
     re = round(z_k.real, 2)
     im = round(z_k.imag, 2)
     st.latex(
-        rf"z_{{{k}}} = \sqrt[{n}]{{{round(r_input, 2)}}} \cdot \text{{cis}}\left( \frac{{\theta + 2\pi \cdot {k}}}{{{n}}} \right) = "
-        rf"{round(root_mod, 2)} \cdot \text{{cis}}({round(angle_k, 2)}\ \text{{rad}}) = {re} {'-' if im < 0 else '+'} {abs(im)}i"
+        rf"z_{{{k}}} = \sqrt[{n}]{{{round(r_input, 2)}}} \cdot 	ext{{cis}}\left( rac{{	heta + 2\pi \cdot {k}}}{{{n}}} 
+ight) = "
+        rf"{round(root_mod, 2)} \cdot 	ext{{cis}}({round(angle_k, 2)}\ 	ext{{rad}}) = {re} {'-' if im < 0 else '+'} {abs(im)}i"
     )
 
-# Compute roots
 roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) * 1.1
-
-# Symmetry toggle
 connect_roots = st.checkbox("Show symmetry lines (connect roots)")
+max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-# Explanation panel
-with st.expander("Why do roots form a regular polygon?"):
-    st.markdown("""
-    When a complex number is raised to the \( n \)th power, its roots are:
-    
-    - Equally spaced around a circle in the complex plane  
-    - Separated by $\\frac{2\\pi}{n}$ radians  
-    - Located at the vertices of a regular $n$-gon
-    """)
+# Root exponentiation animation
+st.markdown("### 🔁 Raise Roots to a Power")
+exp_slider = st.slider("Exponent", min_value=0.0, max_value=5.0, value=1.0, step=0.05)
+powered_roots = [z**exp_slider for z in roots]
+fig2, ax2 = plt.subplots(figsize=(6, 6))
+ax2.axhline(0, color='black', linewidth=1.2)
+ax2.axvline(0, color='black', linewidth=1.2)
+for z in roots:
+    ax2.plot(z.real, z.imag, 'o', color='lightgray')
+for z in powered_roots:
+    ax2.plot(z.real, z.imag, 'o', color='blue')
+    ax2.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
+ax2.set_title(f"Roots Raised to Power {exp_slider}")
+ax2.set_xlabel("Real")
+ax2.set_ylabel("Imaginary")
+ax2.set_aspect('equal')
+ax2.grid(True)
+lim = max(max(abs(z.real), abs(z.imag)) for z in powered_roots) * 1.3
+ax2.set_xlim(-lim, lim)
+ax2.set_ylim(-lim, lim)
+st.pyplot(fig2)
 
-    st.markdown("This symmetry arises from **De Moivre's Theorem**, which places each root at:")
-    st.latex(r"z_k = r^{1/n} \cdot \text{cis} \left( \frac{\theta + 2\pi k}{n} \right)")
-    st.markdown("""
-    When the base number (r) is 1, these roots lie **on the unit circle** and are called the **roots of unity**.
-    """)
-
-
-
-# Root table
+# Table view
 with st.expander("View Roots as a Table"):
     data = [
         {
-            "zₖ": f"z{k}",
+            "Root": f"z{subscript(k)}",
             "Rectangular": f"{round(z.real, 2)} {'-' if z.imag < 0 else '+'} {round(abs(z.imag), 2)}i",
             "Modulus": round(abs(z), 2),
             "Angle (deg)": round(np.degrees(np.angle(z)), 2)
@@ -156,3 +160,27 @@ with st.expander("View Roots as a Table"):
     ]
     df = pd.DataFrame(data)
     st.dataframe(df)
+
+# Explanation panel
+with st.expander("ℹ️ About this app"):
+    st.markdown("""
+    This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
+    """)
+    st.latex(r"z_k = r^{1/n} \cdot \text{cis}\left( \frac{\theta + 2\pi k}{n} \right)")
+
+with st.expander("📀 Why do roots form a regular polygon?"):
+    st.markdown("""
+    When a complex number is raised to the \( n \)th power, its roots are:
+
+    - Equally spaced around a circle in the complex plane
+    - Separated by \( \frac{2\pi}{n} \) radians
+    - Located at the vertices of a regular \( n \)-gon
+
+    This symmetry arises from **De Moivre's Theorem**, which places each root at:
+
+    \[
+    z_k = r^{1/n} \cdot \text{cis} \left( \frac{\theta + 2\pi k}{n} \right)
+    \]
+
+    When the base number is 1, these roots lie **on the unit circle** and are called the **roots of unity**.
+    """)
