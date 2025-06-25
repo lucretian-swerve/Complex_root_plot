@@ -163,7 +163,7 @@ if n <= 6:
     # Display steps
     st.latex(rf"(a + bi)^{{{n}}} = {latex(expanded)}")
     st.latex(rf"= {latex(collected)}")
-    st.latex(rf"\text{{where }} a = {round(a_val, 2)}, \quad b = {round(b_val, 2)}")
+    st.latex(rf"\text{{where }} a = {round(a_val, 6)}, \quad b = {round(b_val, 6)}")
     st.latex(rf"= {re_str} {sign} {im_str}i")
 
 
