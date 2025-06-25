@@ -127,10 +127,10 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-st.markdown("### ▶️ Animate Roots Raising to a Power")
+st.markdown("### Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
-    powers = np.linspace(0.0, n, 30)  # ~30 frames is smoother & faster
+    powers = np.linspace(0.0, n, 40)  # ~40 frames 
 
     # Precompute plot limits for consistency
     all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
@@ -158,7 +158,7 @@ if st.button("Play Animation"):
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
 
         placeholder.pyplot(fig_anim)
-        time.sleep(0.01)  # Faster animation
+        time.sleep(0.001)  # Faster animation
 
     time.sleep(1.5)  # Hold final frame
 
