@@ -128,7 +128,7 @@ fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_root
 st.pyplot(fig)
 
 st.markdown("### Raise Roots to a Power")
-exp_slider = st.slider("Exponent", min_value=0.0, max_value=5.0, value=1.0, step=0.05)
+exp_slider = st.slider("Exponent", min_value=0.0, max_value=float(n), value=1.0, step=0.05)
 powered_roots = raise_root_properly_fixed(r_input, theta_input, n, exp_slider)
 fig2, ax2 = plt.subplots(figsize=(6, 6))
 ax2.axhline(0, color='black', linewidth=1.2)
@@ -151,7 +151,7 @@ st.pyplot(fig2)
 st.markdown("### Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
-    for exp in np.linspace(0.0, 5.0, 60):
+    for exp in np.linspace(0.0, n, 60):
         powered_roots_anim = raise_root_properly_fixed(r_input, theta_input, n, exp)
         fig_anim, ax_anim = plt.subplots(figsize=(6, 6))
         ax_anim.axhline(0, color='black', linewidth=1.2)
