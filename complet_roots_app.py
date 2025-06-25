@@ -172,25 +172,37 @@ if st.button("Play Animation"):
     time.sleep(1.5)
 
 
+st.markdown("Reverse Animate Roots (from power n to 0)")
 if st.button("Play Reverse Animation"):
     placeholder = st.empty()
-    powers = np.linspace(n, 0.0, 60)  # Reverse from n back to 0
+    powers = np.linspace(n, 0.0, 60)
 
-    # Precompute fixed axis limit
-    all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
-    fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in all_powered) * 1.3
+    # Original roots
+    roots = comp_solution(real, imag, n)
+
+    # Fixed plot limits based on full powered version
+    final_roots = raise_root_properly_fixed(r_input, theta_input, n, n)
+    fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in final_roots) * 1.3
 
     for exp in powers:
         powered_roots_anim = raise_root_properly_fixed(r_input, theta_input, n, exp)
-        fig_anim, ax_anim = plt.subplots(figsize=(6, 6))
+        fig_anim, ax_anim = plt.subplots(figsize=(5, 5), dpi=72)
+
+        # Axes and grid
         ax_anim.axhline(0, color='black', linewidth=1.2)
         ax_anim.axvline(0, color='black', linewidth=1.2)
-        for z in roots:
+
+        # Plot original roots
+        for i, z in enumerate(roots):
             ax_anim.plot(z.real, z.imag, 'o', color='lightgray')
-        for z in powered_roots_anim:
-            ax_anim.plot(z.real, z.imag, 'o', color='blue')
-            ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
             ax_anim.text(z.real, z.imag, f"z{i}", fontsize=9, ha='right', va='bottom', color='gray')
+
+        # Powered roots with connection to origin
+        for z in powered_roots_anim:
+            ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
+            ax_anim.plot(z.real, z.imag, 'o', color='blue')
+
+        # Style
         ax_anim.set_title(f"Power = {round(exp, 2)}")
         ax_anim.set_xlabel("Real")
         ax_anim.set_ylabel("Imaginary")
@@ -198,12 +210,12 @@ if st.button("Play Reverse Animation"):
         ax_anim.grid(True)
         ax_anim.set_xlim(-fixed_lim, fixed_lim)
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
-        placeholder.pyplot(fig_anim)
-        plt.close(fig_anim)
-        time.sleep(0.00001)
 
-    # Pause to show the initial root polygon again
+        placeholder.pyplot(fig_anim)
+        time.sleep(0.001)
+
     time.sleep(1.5)
+
 
 
 with st.expander("View Roots as a Table"):
