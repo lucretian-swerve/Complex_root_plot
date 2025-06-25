@@ -14,7 +14,7 @@ def cis(angle):
 def comp_solution(real, imaginary, root, angle_offset=0):
     r = (real**2 + imaginary**2)**0.5
     theta = atan2(imaginary, real)
-    return [r**(1/root) * cis((theta + 2 * pi * k + angle_offset) / root) for k in range(root)]
+    return [r**(1/root) * cis(((theta + 2 * pi * k) / root) + angle_offset) for k in range(root)]
 
 # ----------------------------
 # Plotting function
@@ -76,7 +76,7 @@ with st.expander("ℹ️ About this app"):
 
     - Roots are evenly spaced around a circle
     - You can input in rectangular or polar form
-    - The argument offset slider rotates the entire root set
+    - The angle offset slider rotates the entire root set
     
     Complex roots are given by:
     \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
