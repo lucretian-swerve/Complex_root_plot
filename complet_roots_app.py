@@ -107,7 +107,7 @@ if animate:
         converged = rotate_and_converge(roots, power=exp)
         fig = plot_complex_solutions(converged, fixed_limit=max_radius)
         placeholder.pyplot(fig)
-        time.sleep(0.02)
+        time.sleep(0.01)
 else:
     fig = plot_complex_solutions(roots, fixed_limit=max_radius)
     placeholder.pyplot(fig)
