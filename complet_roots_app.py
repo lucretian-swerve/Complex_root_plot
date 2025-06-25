@@ -1,5 +1,5 @@
 # complex_roots_app.py
-# yeah!
+
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,13 +26,13 @@ def rotate_and_converge(roots, power=1):
 def plot_complex_solutions(complex_nums, fixed_limit=None):
     real_parts = [z.real for z in complex_nums]
     imag_parts = [z.imag for z in complex_nums]
-    radius = max(abs(z) for z in complex_nums)
 
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.axhline(0, color='black', linewidth=1.2)
     ax.axvline(0, color='black', linewidth=1.2)
     ax.scatter(real_parts, imag_parts, color='blue')
 
+    radius = max(abs(z) for z in complex_nums)
     theta = np.linspace(0, 2 * np.pi, 500)
     ax.plot(radius * np.cos(theta), radius * np.sin(theta), '--', color='green')
 
@@ -50,6 +50,10 @@ def plot_complex_solutions(complex_nums, fixed_limit=None):
     if fixed_limit:
         ax.set_xlim(-fixed_limit, fixed_limit)
         ax.set_ylim(-fixed_limit, fixed_limit)
+    else:
+        lim = max(max(abs(np.array(real_parts))), max(abs(np.array(imag_parts)))) * 1.1
+        ax.set_xlim(-lim, lim)
+        ax.set_ylim(-lim, lim)
 
     return fig
 
@@ -94,16 +98,16 @@ reset = st.button("⏹ Reset")
 
 placeholder = st.empty()
 roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) ** n
+max_radius = max(abs(z) for z in roots) ** n * 1.1
 
 if animate:
-    for exp in np.linspace(1, n, 60):
+    for exp in np.linspace(1, n, 100):
         if reset:
             break
         converged = rotate_and_converge(roots, power=exp)
         fig = plot_complex_solutions(converged, fixed_limit=max_radius)
         placeholder.pyplot(fig)
-        time.sleep(0.05)
+        time.sleep(0.02)
 else:
-    fig = plot_complex_solutions(roots)
+    fig = plot_complex_solutions(roots, fixed_limit=max_radius)
     placeholder.pyplot(fig)
