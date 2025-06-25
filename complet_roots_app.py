@@ -18,7 +18,7 @@ def comp_solution(real, imaginary, root):
     return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
 
 def rotate_and_converge(roots, power=1):
-    return [abs(z)**power * cis(np.angle(z) * power) for z in roots]
+    return [abs(z)**power * cis((np.angle(z) % (2 * pi)) * power) for z in roots]
 
 # ----------------------------
 # Plotting function
@@ -88,17 +88,22 @@ with st.expander("ℹ️ About this app"):
     \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
     """)
 
-# Animation toggle
-if st.button("▶ Animate Convergence"):
-    placeholder = st.empty()
-    roots = comp_solution(real, imag, n)
-    max_radius = max(abs(z) for z in roots) ** n  # ensure consistent plot limits
+# Animate or reset
+animate = st.button("▶ Animate Convergence")
+reset = st.button("⏹ Reset")
+
+placeholder = st.empty()
+roots = comp_solution(real, imag, n)
+max_radius = max(abs(z) for z in roots) ** n
+
+if animate:
     for exp in np.linspace(1, n, 60):
+        if reset:
+            break
         converged = rotate_and_converge(roots, power=exp)
         fig = plot_complex_solutions(converged, fixed_limit=max_radius)
         placeholder.pyplot(fig)
         time.sleep(0.05)
 else:
-    roots = comp_solution(real, imag, n)
     fig = plot_complex_solutions(roots)
-    st.pyplot(fig)
+    placeholder.pyplot(fig)
