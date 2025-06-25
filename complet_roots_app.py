@@ -3,7 +3,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-import time
 from math import sin, cos, atan2, pi
 
 # ----------------------------
@@ -16,9 +15,6 @@ def comp_solution(real, imaginary, root):
     r = (real**2 + imaginary**2)**0.5
     theta = atan2(imaginary, real)
     return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
-
-def rotate_and_converge(roots, power=1):
-    return [abs(z)**power * cis((np.angle(z) % (2 * pi)) * power) for z in roots]
 
 # ----------------------------
 # Plotting function
@@ -86,10 +82,10 @@ with st.sidebar:
     st.session_state["imag"] = imag
 
     n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
-    speed = st.slider("Animation Speed (lower = faster)", min_value=1, max_value=100, value=20, step=1)
 
-    animate = st.button("▶ Animate Convergence", key="animate")
-    reset = st.button("⏹ Reset", key="reset")
+    st.markdown("---")
+    st.subheader("🧮 Root Equation")
+    st.latex(f"x^{{{n}}} = {round(real, 2)} {'+' if imag >= 0 else '-'} {abs(round(imag, 2))}i")
 
 with st.expander("ℹ️ About this app"):
     st.markdown("""
@@ -97,24 +93,12 @@ with st.expander("ℹ️ About this app"):
 
     - Roots are evenly spaced around a circle
     - You can input in rectangular or polar form
-    - Click the button below to animate the roots converging to the original number (via exponentiation)
 
     Complex roots are given by:
     \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
     """)
 
-placeholder = st.empty()
 roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) ** n * 1.1
-
-if animate:
-    for exp in np.linspace(1, n, 100):
-        if reset:
-            break
-        converged = rotate_and_converge(roots, power=exp)
-        fig = plot_complex_solutions(converged, fixed_limit=max_radius)
-        placeholder.pyplot(fig)
-        time.sleep(speed / 10000.0)
-else:
-    fig = plot_complex_solutions(roots, fixed_limit=max_radius)
-    placeholder.pyplot(fig)
+max_radius = max(abs(z) for z in roots) * 1.1
+fig = plot_complex_solutions(roots, fixed_limit=max_radius)
+st.pyplot(fig)
