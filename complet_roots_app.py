@@ -127,28 +127,37 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-st.markdown("### Animate Roots Raising to a Power")
+st.markdown("### ▶️ Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
-    powers = np.linspace(0.0, n, 40)  # ~40 frames 
+    powers = np.linspace(0.0, n, 60)
 
-    # Precompute plot limits for consistency
-    all_powered = raise_root_properly_fixed(r_input, theta_input, n, n)
-    fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in all_powered) * 1.3
+    # Original roots (to stay fixed in background)
+    roots = comp_solution(real, imag, n)
+
+    # Axis limit based on final powered position
+    final_roots = raise_root_properly_fixed(r_input, theta_input, n, n)
+    fixed_lim = max(max(abs(z.real), abs(z.imag)) for z in final_roots) * 1.3
 
     for exp in powers:
         powered_roots_anim = raise_root_properly_fixed(r_input, theta_input, n, exp)
         fig_anim, ax_anim = plt.subplots(figsize=(5, 5), dpi=72)
 
-        # Plot style
+        # Axes
         ax_anim.axhline(0, color='black', linewidth=1.2)
         ax_anim.axvline(0, color='black', linewidth=1.2)
 
-        # Plot each root and connecting line to origin
+        # Original roots (static, in background)
+        for i, z in enumerate(roots):
+            ax_anim.plot(z.real, z.imag, 'o', color='lightgray')
+            ax_anim.text(z.real, z.imag, f"z{i}", fontsize=9, ha='right', va='bottom', color='gray')
+
+        # Powered roots (animated)
         for z in powered_roots_anim:
             ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
             ax_anim.plot(z.real, z.imag, 'o', color='blue')
 
+        # Styling
         ax_anim.set_title(f"Power = {round(exp, 2)}")
         ax_anim.set_xlabel("Real")
         ax_anim.set_ylabel("Imaginary")
@@ -158,13 +167,10 @@ if st.button("Play Animation"):
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
 
         placeholder.pyplot(fig_anim)
-        time.sleep(0.001)  # Faster animation
+        time.sleep(0.001)
 
-    time.sleep(1.5)  # Hold final frame
-
-
-    # Hold final frame
     time.sleep(1.5)
+
 
 if st.button("Play Reverse Animation"):
     placeholder = st.empty()
