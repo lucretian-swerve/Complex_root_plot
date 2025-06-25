@@ -4,6 +4,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 from math import sin, cos, atan2, pi, e
+from sympy import symbols, I, expand, simplify, collect, latex
+
 
 # ----------------------------
 # Math functions
@@ -114,6 +116,24 @@ st.pyplot(fig)
 # Root verification section (improved)
 # ----------------------------
 st.subheader("🧪 Root Verification")
+if n <= 6:
+    st.markdown("### 🔍 Binomial Expansion of the Root:")
+    
+    a_val = round(zk.real, 4)
+    b_val = round(zk.imag, 4)
+    
+    a, b = symbols('a b')
+    z = a + b * I
+    expr = expand(z ** n)
+    simplified_expr = collect(expr, I)
+
+    # Substitute numeric values
+    numeric_expr = expr.subs({a: a_val, b: b_val})
+    numeric_simplified = simplify(numeric_expr)
+    
+    st.latex(rf"(a + bi)^{{{n}}} = {latex(expr)}")
+    st.latex(rf"= {latex(simplified_expr)}")
+    st.latex(rf"= {latex(numeric_simplified)}")
 
 root_index = st.slider("Select root to verify (zₖ)", min_value=0, max_value=n-1, value=0, step=1)
 zk = roots[root_index]
