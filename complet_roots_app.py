@@ -137,28 +137,25 @@ st.latex(rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 
 if n <= 6:
     st.markdown("### 🔍 Binomial Expansion:")
     
-    # Round a and b to nearest hundredth
     a_val = round(zk.real, 2)
     b_val = round(zk.imag, 2)
     
     a, b = symbols('a b')
     z_sym = a + b * I
-
-    # Symbolic expansion and simplification
     expanded = expand(z_sym ** n)
     collected = collect(expanded, I)
     substituted_expr = simplify(expanded.subs({a: a_val, b: b_val}))
     
-    # Extract and round real and imaginary parts separately
+    # Round result to 2 decimal places for display
     real_part, imag_part = substituted_expr.as_real_imag()
-    rounded_expr = complex(round(real_part, 4), round(imag_part, 4))
+    re = round(float(real_part), 2)
+    im = round(float(imag_part), 2)
+    sign = "-" if im < 0 else "+"
 
-    # Display
     st.latex(rf"(a + bi)^{{{n}}} = {latex(expanded)}")
     st.latex(rf"= {latex(collected)}")
     st.latex(rf"\text{{where }} a = {a_val}, \quad b = {b_val}")
-    st.latex(rf"= {rounded_expr.real} {'-' if rounded_expr.imag < 0 else '+'} {abs(rounded_expr.imag)}i")
-
+    st.latex(rf"= {re} {sign} {abs(im)}i")
 
 
 # Show result
