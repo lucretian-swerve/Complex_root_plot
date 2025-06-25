@@ -21,7 +21,7 @@ def comp_solution(real, imaginary, root):
 def raise_root_properly(z, power):
     r = abs(z) ** power
     theta = np.angle(z)
-    return r * np.exp(1j * (theta * power))
+    return r * cis(theta * power)
 
 def subscript(n):
     subs = "₀₁₂₃₄₅₆₇₈₉"
