@@ -18,6 +18,11 @@ def comp_solution(real, imaginary, root):
     theta = atan2(imaginary, real)
     return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
 
+def raise_root_properly(z, power):
+    r = abs(z) ** power
+    theta = np.angle(z) * power
+    return r * np.exp(1j * theta)
+
 def subscript(n):
     subs = "₀₁₂₃₄₅₆₇₈₉"
     return ''.join(subs[int(d)] for d in str(n))
@@ -128,7 +133,7 @@ st.pyplot(fig)
 # Root exponentiation animation
 st.markdown("### 🔁 Raise Roots to a Power")
 exp_slider = st.slider("Exponent", min_value=0.0, max_value=5.0, value=1.0, step=0.05)
-powered_roots = [z**exp_slider for z in roots]
+powered_roots = [raise_root_properly(z, exp_slider) for z in roots]
 fig2, ax2 = plt.subplots(figsize=(6, 6))
 ax2.axhline(0, color='black', linewidth=1.2)
 ax2.axvline(0, color='black', linewidth=1.2)
