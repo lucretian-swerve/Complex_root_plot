@@ -158,9 +158,5 @@ st.markdown("### Result:")
 st.latex(rf"z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powered_clean.imag < 0 else '+'} {abs(zk_powered_clean.imag)}i")
 
 # Show original
-st.markdown("### Original Number:")
+st.markdown("### Original Equation:")
 st.latex(rf"x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i")
-
-# Show error
-st.markdown("### Error:")
-st.latex(rf"\left| z_{{{root_index}}}^{{{n}}} - (a + bi) \right| = {round(error, 6)}")
