@@ -79,16 +79,17 @@ if imag < 0:
     eq = f"x^{n} = {real} - {abs(imag)}i"
 else:
     eq = f"x^{n} = {real} + {imag}i"
-st.markdown(f"### Root Equation:\n\n\\[ {eq} \\]")
+st.markdown(f"### Root Equation:")
+st.latex(f"x^{n} = {round(real, 2)} {'-' if imag < 0 else '+'} {round(abs(imag), 2)}i")
+
 
 # Explanation panel
 with st.expander("ℹ️ About this app"):
     st.markdown("""
     This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
-
-    Complex roots are given by:
-    \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
     """)
+    st.latex(r"z_k = r^{1/n} \cdot \text{cis}\left( \frac{\theta + 2\pi k}{n} \right)")
+
 
 # Compute and display roots
 roots = comp_solution(real, imag, n)
