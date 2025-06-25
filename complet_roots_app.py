@@ -57,7 +57,7 @@ def plot_complex_solutions(complex_nums, fixed_limit=None):
 # ----------------------------
 # Streamlit UI
 # ----------------------------
-st.title("🔢 Complex Root Visualizer")
+st.title("Complex Root Visualizer")
 
 # Input mode toggle
 mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
@@ -115,7 +115,7 @@ st.pyplot(fig)
 # ----------------------------
 # Root verification section
 # ----------------------------
-st.subheader("🧪 Root Verification")
+st.subheader("Root Verification")
 
 # Select a root to verify
 root_index = st.slider("Select root to verify (zₖ)", min_value=0, max_value=n-1, value=0, step=1)
@@ -135,7 +135,7 @@ st.latex(rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 
 
 # Binomial expansion (only if n is small)
 if n <= 6:
-    st.markdown("### 🔍 Binomial Expansion:")
+    st.markdown("### Binomial Expansion:")
 
     # Use full-precision a and b from the selected root
     a_val = float(zk.real)
