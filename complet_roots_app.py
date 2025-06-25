@@ -101,7 +101,7 @@ roots = comp_solution(real, imag, n)
 max_radius = max(abs(z) for z in roots) ** n * 1.1
 
 if animate:
-    for exp in np.linspace(1, n, 100):
+    for exp in np.linspace(1, n, 200):
         if reset:
             break
         converged = rotate_and_converge(roots, power=exp)
