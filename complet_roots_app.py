@@ -111,23 +111,36 @@ st.pyplot(fig)
 
 
 # ----------------------------
-# Root verification
+# Root verification section
 # ----------------------------
 st.subheader("🧪 Root Verification")
 
-z0 = roots[0]
-z0_powered = z0 ** n
-reconstructed = complex(round(z0_powered.real, 4), round(z0_powered.imag, 4))
+root_index = st.slider("Select root to verify (zₖ)", min_value=0, max_value=n-1, value=0, step=1)
+zk = roots[root_index]
+zk_powered = zk ** n
+zk_powered_clean = complex(round(zk_powered.real, 6), round(zk_powered.imag, 6))
+original_clean = complex(round(real, 6), round(imag, 6))
+error = abs(zk_powered_clean - original_clean)
 
+# Display with LaTeX
 st.markdown(f"""
-Raising the first root to the power of {n} gives:
-
+**Verifying**:  
 \\[
-z_0^{{{n}}} = {round(z0_powered.real, 4)} {'-' if z0_powered.imag < 0 else '+'} {round(abs(z0_powered.imag), 4)}i
+z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i)^{{{n}}}
 \\]
 
-Original number:  
+**Result**:  
 \\[
-{round(real, 4)} {'-' if imag < 0 else '+'} {round(abs(imag), 4)}i
+z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powered_clean.imag < 0 else '+'} {abs(zk_powered_clean.imag)}i
+\\]
+
+**Original number**:  
+\\[
+x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i
+\\]
+
+**Error**:  
+\\[
+\\left|z_{{{root_index}}}^{{{n}}} - (a + bi)\\right| = {round(error, 6)}
 \\]
 """)
