@@ -119,6 +119,11 @@ for k in range(n):
         rf"{round(root_mod, 2)} \cdot \text{{cis}}({round(angle_k, 2)}\ \text{{rad}}) = {re} {'-' if im < 0 else '+'} {abs(im)}i"
     )
 
+# Compute and display roots
+roots = comp_solution(real, imag, n)
+max_radius = max(abs(z) for z in roots) * 1.1
+fig = plot_complex_solutions(roots, fixed_limit=max_radius)
+st.pyplot(fig)
 
 # Explanation panel
 with st.expander("ℹ️ About this app"):
@@ -126,10 +131,3 @@ with st.expander("ℹ️ About this app"):
     This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
     """)
     st.latex(r"z_k = r^{1/n} \cdot \text{cis}\left( \frac{\theta + 2\pi k}{n} \right)")
-
-
-# Compute and display roots
-roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) * 1.1
-fig = plot_complex_solutions(roots, fixed_limit=max_radius)
-st.pyplot(fig)
