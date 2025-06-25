@@ -12,10 +12,13 @@ from math import sin, cos, atan2, pi
 def cis(angle): 
     return cos(angle) + sin(angle) * 1j
 
-def comp_solution(real, imaginary, root, angle_offset=0):
+def comp_solution(real, imaginary, root):
     r = (real**2 + imaginary**2)**0.5
     theta = atan2(imaginary, real)
-    return [r**(1/root) * cis(((theta + 2 * pi * k) / root) + angle_offset) for k in range(root)]
+    return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
+
+def rotate_and_converge(roots, power=1):
+    return [z**power for z in roots]
 
 # ----------------------------
 # Plotting function
@@ -23,7 +26,7 @@ def comp_solution(real, imaginary, root, angle_offset=0):
 def plot_complex_solutions(complex_nums):
     real_parts = [z.real for z in complex_nums]
     imag_parts = [z.imag for z in complex_nums]
-    radius = abs(complex_nums[0])
+    radius = max(abs(z) for z in complex_nums)
 
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.axhline(0, color='black', linewidth=1.2)
@@ -31,7 +34,7 @@ def plot_complex_solutions(complex_nums):
     ax.scatter(real_parts, imag_parts, color='blue')
 
     theta = np.linspace(0, 2 * np.pi, 500)
-    ax.plot(radius * np.cos(theta), radius * np.sin(theta), '--', color='green', label=f'|z| = {round(radius, 2)}')
+    ax.plot(radius * np.cos(theta), radius * np.sin(theta), '--', color='green')
 
     for i, z in enumerate(complex_nums):
         label = f"z{i} = {round(z.real, 2)} + {round(z.imag, 2)}j"
@@ -42,7 +45,6 @@ def plot_complex_solutions(complex_nums):
     ax.set_title("Complex Roots")
     ax.set_xlabel("Real")
     ax.set_ylabel("Imaginary")
-    ax.legend()
     return fig
 
 # ----------------------------
@@ -74,21 +76,22 @@ with st.expander("ℹ️ About this app"):
 
     - Roots are evenly spaced around a circle
     - You can input in rectangular or polar form
-    - Click the button below to animate a full rotation of the root configuration
+    - Click the button below to animate the roots converging to the original number (via exponentiation)
 
     Complex roots are given by:
     \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
     """)
 
 # Animation toggle
-if st.button("▶ Animate Rotation"):
+if st.button("▶ Animate Convergence"):
     placeholder = st.empty()
-    for angle_offset in np.linspace(0, 2 * pi, 60):
-        roots = comp_solution(real, imag, n, angle_offset)
-        fig = plot_complex_solutions(roots)
+    roots = comp_solution(real, imag, n)
+    for exp in np.linspace(1, n, 60):
+        converged = rotate_and_converge(roots, power=exp)
+        fig = plot_complex_solutions(converged)
         placeholder.pyplot(fig)
         time.sleep(0.05)
 else:
-    roots = comp_solution(real, imag, n, angle_offset=0)
+    roots = comp_solution(real, imag, n)
     fig = plot_complex_solutions(roots)
     st.pyplot(fig)
