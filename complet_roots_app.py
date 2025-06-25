@@ -111,36 +111,38 @@ st.pyplot(fig)
 
 
 # ----------------------------
-# Root verification section
+# Root verification section (improved)
 # ----------------------------
 st.subheader("🧪 Root Verification")
 
 root_index = st.slider("Select root to verify (zₖ)", min_value=0, max_value=n-1, value=0, step=1)
 zk = roots[root_index]
 zk_powered = zk ** n
-zk_powered_clean = complex(round(zk_powered.real, 6), round(zk_powered.imag, 6))
-original_clean = complex(round(real, 6), round(imag, 6))
-error = abs(zk_powered_clean - original_clean)
+zk_powered_clean = complex(round(zk_powered.real, 4), round(zk_powered.imag, 4))
+original_clean = complex(round(real, 4), round(imag, 4))
+error = abs(zk_powered - (real + imag * 1j))
 
-# Display with LaTeX
-st.markdown(f"""
-**Verifying**:  
-\\[
-z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i)^{{{n}}}
-\\]
+st.markdown(f"### Selected Root: $z_{{{root_index}}}$")
+st.latex(
+    rf"z_{{{root_index}}} = {round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i"
+)
 
-**Result**:  
-\\[
-z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powered_clean.imag < 0 else '+'} {abs(zk_powered_clean.imag)}i
-\\]
+st.markdown("### Raised to the Power:")
+st.latex(
+    rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 0 else '+'} {round(abs(zk.imag), 4)}i)^{{{n}}}"
+)
 
-**Original number**:  
-\\[
-x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i
-\\]
+st.markdown("### Result:")
+st.latex(
+    rf"z_{{{root_index}}}^{{{n}}} = {zk_powered_clean.real} {'-' if zk_powered_clean.imag < 0 else '+'} {abs(zk_powered_clean.imag)}i"
+)
 
-**Error**:  
-\\[
-\\left|z_{{{root_index}}}^{{{n}}} - (a + bi)\\right| = {round(error, 6)}
-\\]
-""")
+st.markdown("### Original:")
+st.latex(
+    rf"x^{{{n}}} = {original_clean.real} {'-' if original_clean.imag < 0 else '+'} {abs(original_clean.imag)}i"
+)
+
+st.markdown("### Error:")
+st.latex(
+    rf"\left| z_{{{root_index}}}^{{{n}}} - (a + bi) \right| = {round(error, 6)}"
+)
