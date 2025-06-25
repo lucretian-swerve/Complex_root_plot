@@ -76,7 +76,7 @@ else:
 n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
 
 # Explanation panel
-with st.expander("ℹ️ About this app"):
+with st.expander("ℹ️ About this app TEST"):
     st.markdown("""
     This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
 
