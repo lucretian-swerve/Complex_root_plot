@@ -155,7 +155,7 @@ if st.button("Play Animation"):
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
         placeholder.pyplot(fig_anim)
         plt.close(fig_anim)
-        time.sleep(0.001)
+        time.sleep(0.0001)
 
     # Hold final frame
     time.sleep(1.5)
@@ -187,7 +187,7 @@ if st.button("Play Reverse Animation"):
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
         placeholder.pyplot(fig_anim)
         plt.close(fig_anim)
-        time.sleep(0.05)
+        time.sleep(0.0001)
 
     # Pause to show the initial root polygon again
     time.sleep(1.5)
