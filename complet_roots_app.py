@@ -96,6 +96,29 @@ else:
 st.markdown(f"### Root Equation:")
 st.latex(f"x^{n} = {round(real, 2)} {'-' if imag < 0 else '+'} {round(abs(imag), 2)}i")
 
+# ----------------------------
+# Root calculation breakdown
+# ----------------------------
+st.markdown("### 🧮 Root Calculations")
+
+# Compute polar coordinates of input
+r_input = (real**2 + imag**2)**0.5
+theta_input = atan2(imag, real)  # radians
+
+# Format and display each root
+for k in range(n):
+    angle_k = (theta_input + 2 * pi * k) / n
+    root_mod = r_input ** (1/n)
+    z_k = root_mod * cis(angle_k)
+    re = round(z_k.real, 2)
+    im = round(z_k.imag, 2)
+    angle_deg = round(np.degrees(angle_k), 2)
+
+    st.latex(
+        rf"z_{{{k}}} = \sqrt[{n}]{{{round(r_input, 2)}}} \cdot \text{{cis}}\left( \frac{{\theta + 2\pi \cdot {k}}}{{{n}}} \right) = "
+        rf"{round(root_mod, 2)} \cdot \text{{cis}}({round(angle_k, 2)}\ \text{{rad}}) = {re} {'-' if im < 0 else '+'} {abs(im)}i"
+    )
+
 
 # Explanation panel
 with st.expander("ℹ️ About this app"):
