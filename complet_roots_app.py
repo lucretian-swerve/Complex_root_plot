@@ -150,6 +150,7 @@ if st.button("Play Animation"):
         ax_anim.grid(False)
         ax_anim.set_xlim(-fixed_lim, fixed_lim)
         ax_anim.set_ylim(-fixed_lim, fixed_lim)
+        ax_anim.plot([0, z.real], [0, z.imag], '--', color='gray', linewidth=1.2)
         placeholder.pyplot(fig_anim)
         time.sleep(0.01)  # Short but perceptible
 
