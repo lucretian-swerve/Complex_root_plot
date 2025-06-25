@@ -90,6 +90,14 @@ with st.expander("ℹ️ About this app"):
     """)
     st.latex(r"z_k = r^{1/n} \cdot \text{cis}\left( \frac{\theta + 2\pi k}{n} \right)")
 
+
+# Compute and display roots
+roots = comp_solution(real, imag, n)
+max_radius = max(abs(z) for z in roots) * 1.1
+fig = plot_complex_solutions(roots, fixed_limit=max_radius)
+st.pyplot(fig)
+
+
 # ----------------------------
 # Root verification
 # ----------------------------
@@ -111,11 +119,3 @@ Original number:
 {round(real, 4)} {'-' if imag < 0 else '+'} {round(abs(imag), 4)}i
 \\]
 """)
-
-# Compute and display roots
-roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) * 1.1
-fig = plot_complex_solutions(roots, fixed_limit=max_radius)
-st.pyplot(fig)
-
-
