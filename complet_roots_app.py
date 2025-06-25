@@ -174,20 +174,22 @@ with st.expander("View Roots as a Table"):
     st.dataframe(df)
 
 with st.expander("Why do roots form a regular polygon?"):
-    st.markdown(r"""
+    st.markdown("""
 When a complex number is raised to the \( n \)th power, its roots are:
 
 - Equally spaced around a circle in the complex plane  
-- Separated by \( \frac{2\pi}{n} \) radians  
 - Located at the vertices of a regular \( n \)-gon
+- Separated by this angle between consecutive roots:
+""")
+    
+    st.latex(r"\Delta \theta = \frac{2\pi}{n} \text{ radians}")
 
+    st.markdown("""
 This symmetry arises from **De Moivre's Theorem**, which places each root at:
 """)
 
     st.latex(r"z_k = r^{1/n} \cdot \text{cis} \left( \frac{\theta + 2\pi k}{n} \right)")
 
-    st.markdown(r"""
+    st.markdown("""
 When the base number is 1, these roots lie **on the unit circle** and are called the **roots of unity**.
 """)
-
-
