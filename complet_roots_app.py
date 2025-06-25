@@ -62,23 +62,28 @@ def plot_complex_solutions(complex_nums, fixed_limit=None):
 st.set_page_config(page_title="Complex Root Visualizer", layout="centered")
 st.title("🔢 Complex Root Visualizer")
 
+if "real" not in st.session_state:
+    st.session_state["real"] = -8.0
+if "imag" not in st.session_state:
+    st.session_state["imag"] = 0.0
+
 with st.sidebar:
     mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
     if mode == "Rectangular (a + bi)":
-        real = st.number_input("Real part (a)", key="real_input", value=st.session_state.get("real", -8.0))
-        imag = st.number_input("Imaginary part (b)", key="imag_input", value=st.session_state.get("imag", 0.0))
-        st.session_state["real"] = real
-        st.session_state["imag"] = imag
+        real = st.number_input("Real part (a)", value=st.session_state["real"], key="real_input")
+        imag = st.number_input("Imaginary part (b)", value=st.session_state["imag"], key="imag_input")
     else:
         r = st.number_input("Modulus (r)", value=8.0, min_value=0.0)
         theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
         theta = np.deg2rad(theta_deg)
         real = r * np.cos(theta)
         imag = r * np.sin(theta)
-        st.session_state["real"] = real
-        st.session_state["imag"] = imag
         st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
+
+    # Always update session_state with latest real/imag
+    st.session_state["real"] = real
+    st.session_state["imag"] = imag
 
     n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
     speed = st.slider("Animation Speed (lower = faster)", min_value=1, max_value=100, value=20, step=1)
