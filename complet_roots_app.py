@@ -3,6 +3,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 from math import sin, cos, atan2, pi
 
 # ----------------------------
@@ -66,9 +67,6 @@ else:
 
 n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=6, step=1)
 
-# Optional: animated rotation
-angle_offset = st.slider("Animate rotation (radians)", 0.0, 2 * pi, step=0.1)
-
 # Explanation panel
 with st.expander("ℹ️ About this app"):
     st.markdown("""
@@ -76,14 +74,21 @@ with st.expander("ℹ️ About this app"):
 
     - Roots are evenly spaced around a circle
     - You can input in rectangular or polar form
-    - The angle offset slider rotates the entire root set
-    
+    - Click the button below to animate a full rotation of the root configuration
+
     Complex roots are given by:
     \[ z_k = r^{1/n} \text{cis}\left( \frac{\theta + 2\pi k}{n} \right) \]
     """)
 
-# Compute and plot
-roots = comp_solution(real, imag, n, angle_offset)
-fig = plot_complex_solutions(roots)
-
-st.pyplot(fig)
+# Animation toggle
+if st.button("▶ Animate Rotation"):
+    placeholder = st.empty()
+    for angle_offset in np.linspace(0, 2 * pi, 60):
+        roots = comp_solution(real, imag, n, angle_offset)
+        fig = plot_complex_solutions(roots)
+        placeholder.pyplot(fig)
+        time.sleep(0.05)
+else:
+    roots = comp_solution(real, imag, n, angle_offset=0)
+    fig = plot_complex_solutions(roots)
+    st.pyplot(fig)
