@@ -96,3 +96,25 @@ roots = comp_solution(real, imag, n)
 max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius)
 st.pyplot(fig)
+
+# ----------------------------
+# Root verification
+# ----------------------------
+st.subheader("🧪 Root Verification")
+
+z0 = roots[0]
+z0_powered = z0 ** n
+reconstructed = complex(round(z0_powered.real, 4), round(z0_powered.imag, 4))
+
+st.markdown(f"""
+Raising the first root to the power of {n} gives:
+
+\\[
+z_0^{{{n}}} = {round(z0_powered.real, 4)} {'-' if z0_powered.imag < 0 else '+'} {round(abs(z0_powered.imag), 4)}i
+\\]
+
+Original number:  
+\\[
+{round(real, 4)} {'-' if imag < 0 else '+'} {round(abs(imag), 4)}i
+\\]
+""")
