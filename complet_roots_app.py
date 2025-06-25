@@ -3,7 +3,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
-from math import sin, cos, atan2, pi
+from math import sin, cos, atan2, pi, e
 
 # ----------------------------
 # Math functions
@@ -75,7 +75,7 @@ else:
         user_input = st.text_input("Angle θ (radians)", value="pi")
         try:
             # Allow expressions like "pi", "pi/2", "3*pi/4"
-            theta = eval(user_input, {"__builtins__": None}, {"pi": math.pi, "e": math.e})
+            theta = eval(user_input, {"__builtins__": None}, {"pi": pi, "e": e})
             st.caption(f"θ ≈ {round(theta, 4)} radians")
         except:
             st.error("Invalid expression. Try something like `pi/2` or `3*pi/4`.")
