@@ -137,8 +137,9 @@ st.latex(rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 
 if n <= 6:
     st.markdown("### 🔍 Binomial Expansion:")
     
-    a_val = round(zk.real, 2)
-    b_val = round(zk.imag, 2)
+    # Use full-precision real and imaginary parts
+    a_val = float(zk.real)
+    b_val = float(zk.imag)
     
     a, b = symbols('a b')
     z_sym = a + b * I
@@ -146,15 +147,16 @@ if n <= 6:
     collected = collect(expanded, I)
     substituted_expr = simplify(expanded.subs({a: a_val, b: b_val}))
     
-    # Round result to 2 decimal places for display
+    # Extract real and imaginary parts, evaluate numerically, and round for display
     real_part, imag_part = substituted_expr.as_real_imag()
-    re = round(float(real_part), 2)
-    im = round(float(imag_part), 2)
+    re = round(real_part.evalf(), 2)
+    im = round(imag_part.evalf(), 2)
     sign = "-" if im < 0 else "+"
 
+    # Display the binomial expansion
     st.latex(rf"(a + bi)^{{{n}}} = {latex(expanded)}")
     st.latex(rf"= {latex(collected)}")
-    st.latex(rf"\text{{where }} a = {a_val}, \quad b = {b_val}")
+    st.latex(rf"\text{{where }} a = {round(a_val, 2)}, \quad b = {round(b_val, 2)}")
     st.latex(rf"= {re} {sign} {abs(im)}i")
 
 
