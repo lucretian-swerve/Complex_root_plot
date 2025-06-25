@@ -136,18 +136,22 @@ st.latex(rf"z_{{{root_index}}}^{{{n}}} = ({round(zk.real, 4)} {'-' if zk.imag < 
 # Binomial expansion (only if n is small)
 if n <= 6:
     st.markdown("### 🔍 Binomial Expansion:")
+    
+    # Get rounded real and imaginary parts
     a_val = round(zk.real, 4)
     b_val = round(zk.imag, 4)
+    
     a, b = symbols('a b')
     z_sym = a + b * I
-
     expanded = expand(z_sym ** n)
     collected = collect(expanded, I)
-    substituted = simplify(expanded.subs({a: a_val, b: b_val}))
-
+    substituted_expr = simplify(expanded.subs({a: a_val, b: b_val}))
+    
     st.latex(rf"(a + bi)^{{{n}}} = {latex(expanded)}")
     st.latex(rf"= {latex(collected)}")
-    st.latex(rf"= {latex(substituted)}")
+    st.latex(rf"\text{{where }} a = {a_val}, \quad b = {b_val}")
+    st.latex(rf"= {latex(substituted_expr)}")
+
 
 # Show result
 st.markdown("### Result:")
