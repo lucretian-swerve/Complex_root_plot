@@ -78,6 +78,7 @@ else:
     st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
 
 n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
+speed = st.slider("Animation Speed (lower = faster)", min_value=1, max_value=100, value=20, step=1)
 
 # Explanation panel
 with st.expander("ℹ️ About this app"):
@@ -101,13 +102,13 @@ roots = comp_solution(real, imag, n)
 max_radius = max(abs(z) for z in roots) ** n * 1.1
 
 if animate:
-    for exp in np.linspace(1, n, 200):
+    for exp in np.linspace(1, n, 100):
         if reset:
             break
         converged = rotate_and_converge(roots, power=exp)
         fig = plot_complex_solutions(converged, fixed_limit=max_radius)
         placeholder.pyplot(fig)
-        time.sleep(0.01)
+        time.sleep(speed / 2000.0)  # Faster animation control
 else:
     fig = plot_complex_solutions(roots, fixed_limit=max_radius)
     placeholder.pyplot(fig)
