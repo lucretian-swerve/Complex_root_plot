@@ -18,12 +18,12 @@ def comp_solution(real, imaginary, root):
     return [r**(1/root) * cis((theta + 2 * pi * k) / root) for k in range(root)]
 
 def rotate_and_converge(roots, power=1):
-    return [z**power for z in roots]
+    return [abs(z)**power * cis(np.angle(z) * power) for z in roots]
 
 # ----------------------------
 # Plotting function
 # ----------------------------
-def plot_complex_solutions(complex_nums):
+def plot_complex_solutions(complex_nums, fixed_limit=None):
     real_parts = [z.real for z in complex_nums]
     imag_parts = [z.imag for z in complex_nums]
     radius = max(abs(z) for z in complex_nums)
@@ -45,6 +45,12 @@ def plot_complex_solutions(complex_nums):
     ax.set_title("Complex Roots")
     ax.set_xlabel("Real")
     ax.set_ylabel("Imaginary")
+
+    # Lock axis limits to prevent plot from resizing
+    if fixed_limit:
+        ax.set_xlim(-fixed_limit, fixed_limit)
+        ax.set_ylim(-fixed_limit, fixed_limit)
+
     return fig
 
 # ----------------------------
@@ -86,9 +92,10 @@ with st.expander("ℹ️ About this app"):
 if st.button("▶ Animate Convergence"):
     placeholder = st.empty()
     roots = comp_solution(real, imag, n)
+    max_radius = max(abs(z) for z in roots) ** n  # ensure consistent plot limits
     for exp in np.linspace(1, n, 60):
         converged = rotate_and_converge(roots, power=exp)
-        fig = plot_complex_solutions(converged)
+        fig = plot_complex_solutions(converged, fixed_limit=max_radius)
         placeholder.pyplot(fig)
         time.sleep(0.05)
 else:
