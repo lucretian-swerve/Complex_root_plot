@@ -20,8 +20,8 @@ def comp_solution(real, imaginary, root):
 
 def raise_root_properly(z, power):
     r = abs(z) ** power
-    theta = np.angle(z) * power
-    return r * np.exp(1j * theta)
+    theta = np.angle(z)
+    return r * np.exp(1j * (theta * power))
 
 def subscript(n):
     subs = "₀₁₂₃₄₅₆₇₈₉"
@@ -39,19 +39,16 @@ def plot_complex_solutions(complex_nums, fixed_limit=None, connect=False):
     ax.axvline(0, color='black', linewidth=1.2)
     ax.scatter(real_parts, imag_parts, color='blue')
 
-    # Draw circle
     radius = max(abs(z) for z in complex_nums)
     theta = np.linspace(0, 2 * np.pi, 500)
     ax.plot(radius * np.cos(theta), radius * np.sin(theta), '--', color='green')
 
-    # Connect roots in order if enabled
     if connect and len(complex_nums) > 1:
         for i in range(len(complex_nums)):
             z1 = complex_nums[i]
             z2 = complex_nums[(i + 1) % len(complex_nums)]
             ax.plot([z1.real, z2.real], [z1.imag, z2.imag], color='gray', linestyle='-', linewidth=2)
 
-    # Annotate roots
     for i, z in enumerate(complex_nums):
         label = f"z{i} = {round(z.real, 2)} + {round(z.imag, 2)}j"
         ax.text(z.real, z.imag, label, fontsize=9, ha='left', va='bottom')
@@ -77,10 +74,8 @@ def plot_complex_solutions(complex_nums, fixed_limit=None, connect=False):
 # ----------------------------
 st.title("Complex Root Visualizer")
 
-# Input mode toggle
 mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
-# Input fields
 if mode == "Rectangular (a + bi)":
     real = st.number_input("Real part (a)", value=1.0)
     imag = st.number_input("Imaginary part (b)", value=0.0)
@@ -105,11 +100,9 @@ else:
 
 n = st.number_input("Number of roots (n)", min_value=1, max_value=24, value=3, step=1)
 
-# Show root equation
 st.markdown(f"### Root Equation:")
 st.latex(f"x^{n} = {round(real, 2)} {'-' if imag < 0 else '+'} {round(abs(imag), 2)}i")
 
-# Root calculation breakdown
 st.markdown("### Root Calculations")
 r_input = (real**2 + imag**2)**0.5
 theta_input = atan2(imag, real)
@@ -130,7 +123,6 @@ max_radius = max(abs(z) for z in roots) * 1.1
 fig = plot_complex_solutions(roots, fixed_limit=max_radius, connect=connect_roots)
 st.pyplot(fig)
 
-# Root exponentiation animation
 st.markdown("### 🔁 Raise Roots to a Power")
 exp_slider = st.slider("Exponent", min_value=0.0, max_value=5.0, value=1.0, step=0.05)
 powered_roots = [raise_root_properly(z, exp_slider) for z in roots]
@@ -152,7 +144,6 @@ ax2.set_xlim(-lim, lim)
 ax2.set_ylim(-lim, lim)
 st.pyplot(fig2)
 
-# Table view
 with st.expander("View Roots as a Table"):
     data = [
         {
@@ -165,7 +156,6 @@ with st.expander("View Roots as a Table"):
     df = pd.DataFrame(data)
     st.dataframe(df)
 
-# Explanation panel
 with st.expander("ℹ️ About this app"):
     st.markdown("""
     This app plots the **n complex roots** of a given complex number using **De Moivre's Theorem**.
