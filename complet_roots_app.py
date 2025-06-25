@@ -66,8 +66,20 @@ if mode == "Rectangular (a + bi)":
     imag = st.number_input("Imaginary part (b)", value=0.0)
 else:
     r = st.number_input("Modulus (r)", value=1.0, min_value=0.0)
-    theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
-    theta = np.deg2rad(theta_deg)
+    angle_mode = st.radio("Angle input mode", ["Degrees", "Radians"])
+    if angle_mode == "Degrees":
+        theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
+        theta = np.deg2rad(theta_deg)
+        st.caption(f"θ = {round(theta, 4)} radians")
+    else:
+        user_input = st.text_input("Angle θ (radians)", value="pi")
+        try:
+            # Allow expressions like "pi", "pi/2", "3*pi/4"
+            theta = eval(user_input, {"__builtins__": None}, {"pi": math.pi, "e": math.e})
+            st.caption(f"θ ≈ {round(theta, 4)} radians")
+        except:
+            st.error("Invalid expression. Try something like `pi/2` or `3*pi/4`.")
+            theta = 0.0  # default fallback
     real = r * np.cos(theta)
     imag = r * np.sin(theta)
     st.caption(f"Converted to rectangular: a = {round(real, 2)}, b = {round(imag, 2)}")
