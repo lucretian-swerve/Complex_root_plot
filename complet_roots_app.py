@@ -62,10 +62,10 @@ mode = st.radio("Input Mode", ["Rectangular (a + bi)", "Polar (r ∠ θ)"])
 
 # Input fields
 if mode == "Rectangular (a + bi)":
-    real = st.number_input("Real part (a)", value=1)
+    real = st.number_input("Real part (a)", value=1.0)
     imag = st.number_input("Imaginary part (b)", value=0.0)
 else:
-    r = st.number_input("Modulus (r)", value=1, min_value=0.0)
+    r = st.number_input("Modulus (r)", value=1.0, min_value=0.0)
     theta_deg = st.number_input("Angle θ (degrees)", value=180.0)
     theta = np.deg2rad(theta_deg)
     real = r * np.cos(theta)
@@ -90,13 +90,6 @@ with st.expander("ℹ️ About this app"):
     """)
     st.latex(r"z_k = r^{1/n} \cdot \text{cis}\left( \frac{\theta + 2\pi k}{n} \right)")
 
-
-# Compute and display roots
-roots = comp_solution(real, imag, n)
-max_radius = max(abs(z) for z in roots) * 1.1
-fig = plot_complex_solutions(roots, fixed_limit=max_radius)
-st.pyplot(fig)
-
 # ----------------------------
 # Root verification
 # ----------------------------
@@ -118,3 +111,11 @@ Original number:
 {round(real, 4)} {'-' if imag < 0 else '+'} {round(abs(imag), 4)}i
 \\]
 """)
+
+# Compute and display roots
+roots = comp_solution(real, imag, n)
+max_radius = max(abs(z) for z in roots) * 1.1
+fig = plot_complex_solutions(roots, fixed_limit=max_radius)
+st.pyplot(fig)
+
+
