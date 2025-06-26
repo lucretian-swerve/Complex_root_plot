@@ -175,7 +175,7 @@ if st.button("Play Animation"):
 st.markdown("Reverse Animate Roots (from power n to 0)")
 if st.button("Play Reverse Animation"):
     placeholder = st.empty()
-    powers = np.linspace(n, 1.0.0, 60)
+    powers = np.linspace(n, 1.0, 60)
 
     # Original roots
     roots = comp_solution(real, imag, n)
