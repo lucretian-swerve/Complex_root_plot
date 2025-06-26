@@ -130,7 +130,7 @@ st.pyplot(fig)
 st.markdown("Animate Roots Raising to a Power")
 if st.button("Play Animation"):
     placeholder = st.empty()
-    powers = np.linspace(0.0, n, 60)
+    powers = np.linspace(1.0, n, 60)
 
     # Original roots (to stay fixed in background)
     roots = comp_solution(real, imag, n)
@@ -175,7 +175,7 @@ if st.button("Play Animation"):
 st.markdown("Reverse Animate Roots (from power n to 0)")
 if st.button("Play Reverse Animation"):
     placeholder = st.empty()
-    powers = np.linspace(n, 0.0, 60)
+    powers = np.linspace(n, 1.0.0, 60)
 
     # Original roots
     roots = comp_solution(real, imag, n)
